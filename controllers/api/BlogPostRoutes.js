@@ -4,25 +4,23 @@ const withAuth = require('../../utils/auth');
 
 router.get('/', async (req, res) => {
   try {
-    // Get all projects and JOIN with user data
+    // Get all BlogPosts and JOIN with user data
     const BlogPostData = await BlogPosts.findAll({
+      ...req.body,
       attributes: [['title', 'contents', 'date_created']],
     });
 
     // Serialize data so the template can read it
     const BlogPosts = BlogPostData.map((BlogPosts) => BlogPosts.get({ plain: true }));
-
-    // Pass serialized data and session flag into template
     res.render('blogposts', { 
-      BlogPosts, 
-      logged_in: req.session.logged_in 
+      BlogPosts
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-router.get('/blogposts/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const BlogPostData = await BlogPosts.findByPk(req.params.id, {
       include: [
@@ -37,7 +35,7 @@ router.get('/blogposts/:id', async (req, res) => {
 
     res.render('blogposts', {
       ...BlogPosts,
-      logged_in: req.session.logged_in
+      logged_in: req.BlogPosts.logged_in
     });
   } catch (err) {
     res.status(500).json(err);
@@ -62,7 +60,7 @@ router.delete('/:id', withAuth, async (req, res) => {
     const BlogPostData = await BlogPosts.destroy({
       where: {
         id: req.params.id,
-        user_id: req.session.user_id,
+        user_id: req.BlogPosts.user_id,
       },
     });
 

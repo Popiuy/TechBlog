@@ -1,14 +1,22 @@
 const router = require('express').Router();
-const { User } = require('../../models/User');
-
+const { User } = require('../../models');
+console.log("Starting the route file...");
 router.post('/', async (req, res) => {
   try {
-    const userData = await User.create(req.body);
+    console.log("im in the try");
+    const userData = await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password
+    });
+    console.log(userData);
 
     req.session.save(() => {
+      console.log("im in the save");
+      req.session.name = userData.name;
       req.session.user_id = userData.id;
+      req.session.password = userData.password;
       req.session.logged_in = true;
-
       res.status(200).json(userData);
     });
   } catch (err) {
@@ -49,12 +57,12 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  if (req.session.logged_in) {
-    req.session.destroy(() => {
-      res.status(204).end();
+  if (req.user.logged_in) {
+    req.user.destroy(() => {
+      res.status(204).send();
     });
   } else {
-    res.status(404).end();
+    res.status(404).send();
   }
 });
 
