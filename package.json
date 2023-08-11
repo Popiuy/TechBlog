@@ -9,6 +9,9 @@
     "seed": "node seeds/seed.js",
     "watch": "nodemon"
   },
+  "engines" : {
+    "node" : "v18.17.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
