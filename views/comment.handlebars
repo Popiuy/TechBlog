@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-auto">
+    <h2>Welcome, {{name}}!</h2>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-6">
+    <h3>Create a New Comment:</h3>
+
+      <form class="form new-Comment-form">
+      <div class="form-group">
+        <label for="Comment-description">Comment description:</label>
+        <input class="form-input" type="text" id="Comment-description" name="Comment-description" />
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </form>
+  </div>
+
+  {{#if Comment.length}}
+  <div class="col-md-6 Comment-list">
+    <h3>Current Comments:</h3>
+
+    {{#each Comments as |Comment|}}
+    <div class="row mb-2">
+      <div class="col-md-8">
+        <h4>{{Comment.description}}</h4>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-sm btn-danger" data-id="{{Comment.id}}">DELETE</button>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+</div>
+
+<script src="./js/profile.js"></script>
