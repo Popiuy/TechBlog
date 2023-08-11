@@ -6,12 +6,7 @@ router.get('/', async (req, res) => {
   try {
     // Get all projects and JOIN with user data
     const BlogPostData = await BlogPosts.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ['title', 'contents'],
-        },
-      ],
+      attributes: [['title', 'contents', 'date_created']],
     });
 
     // Serialize data so the template can read it
@@ -19,7 +14,7 @@ router.get('/', async (req, res) => {
 
     // Pass serialized data and session flag into template
     res.render('blogposts', { 
-      projects, 
+      BlogPosts, 
       logged_in: req.session.logged_in 
     });
   } catch (err) {

@@ -5,7 +5,7 @@ const newFormHandler = async (event) => {
   const contents = document.querySelector('#BlogPost-desc').value.trim();
 
   if (title && contents) {
-    const response = await fetch(`/api/BlogPosts`, {
+    const response = await fetch(`/api/blogposts`, {
       method: 'POST',
       body: JSON.stringify({ title, contents, date_created: new Date() }),
       headers: {
@@ -14,7 +14,7 @@ const newFormHandler = async (event) => {
     });
 
     if (response.ok) {
-      document.location.replace('/BlogPosts');
+      document.location.replace('/blogposts');
     } else {
       alert('Failed to create BlogPost');
     }
@@ -25,12 +25,12 @@ const delButtonHandler = async (event) => {
   if (event.target.hasAttribute('data-id')) {
     const id = event.target.getAttribute('data-id');
 
-    const response = await fetch(`/api/BlogPosts/${id}`, {
+    const response = await fetch(`/api/blogposts/${id}`, {
       method: 'DELETE',
     });
 
     if (response.ok) {
-      document.location.replace('/BlogPosts');
+      document.location.replace('/blogposts');
     } else {
       alert('Failed to delete BlogPosts');
     }

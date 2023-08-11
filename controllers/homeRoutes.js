@@ -3,7 +3,7 @@ const { Comment, User, BlogPosts } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Use withAuth middleware to prevent access to route
-router.get('/BlogPosts', withAuth, async (req, res) => {
+router.get('/blogposts', withAuth, async (req, res) => {
   try {
     // Find the logged in user based on the session ID
     const userData = await User.findByPk(req.session.user_id, {
@@ -13,10 +13,7 @@ router.get('/BlogPosts', withAuth, async (req, res) => {
 
     const user = userData.get({ plain: true });
 
-    res.render('homepage', {
-      ...user,
-      logged_in: true
-    });
+    res.render('blogposts');
   } catch (err) {
     res.status(500).json(err);
   }
