@@ -44,3 +44,8 @@ document
 document
   .querySelector('.BlogPost-list')
   .addEventListener('click', delButtonHandler);
+
+  document
+  .querySelector('/login')
+  .addEventListener('click', loginhandler);
+
