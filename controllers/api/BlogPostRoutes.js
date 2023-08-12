@@ -4,29 +4,10 @@ const withAuth = require('../../utils/auth');
 
 router.get('/', async (req, res) => {
   try {
-    const blogPostData = await BlogPosts.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ['name'],
-        },
-        {
-          model: Comment,
-          attributes: ['description'],
-        },
-      ],
-    });
-
-    const blogPosts = blogPostData.map((post) => post.get({ plain: true }));
-
-    const loggedIn = req.session.loggedIn;
-
-    res.render('homepage', {
-      blogPosts,
-      loggedIn,
-    });
+    // Get all BlogPosts and JOIN with user data
+    const BlogPostData = await BlogPosts.findAll(req.body);
+    res.status(200).json(BlogPostData);
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -71,7 +52,7 @@ router.put('/:id', withAuth, async (req, res) => {
     );
 
     if (!updatedBlogPost[0]) {
-      res.status(404).json({ message: 'No BlogPosts found with this id!' });
+      res.status(404).json({ message: 'Please change something!' });
       return;
     }
 

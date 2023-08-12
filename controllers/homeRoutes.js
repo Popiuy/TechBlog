@@ -37,7 +37,7 @@ router.get('/login', (req, res) => {
   }
 
   console.log("User is not logged in. Rendering login page...");
-  res.render('login');
+  res.render('/login');
 });
 
 
