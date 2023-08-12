@@ -1,18 +1,14 @@
 const router = require('express').Router();
 const { Comment, User, BlogPosts } = require('../models');
-console.log("im in /controllers/homeRoutes");
 
 router.get('/', async (req, res) => {
   try {
     // Find the logged in user based on the session ID
     const userData = await User.findAll({
       attributes: { exclude: ['password'] },
-      include: [
-        {
-          model: BlogPosts
-        },
-      ],
+      order: [['name', 'ASC']],
     });
+
     console.log(userData);
     const users = userData.map((project) => project.get({ plain: true }));
 
@@ -20,6 +16,7 @@ router.get('/', async (req, res) => {
     console.log("req.sessionID", req.sessionID)
     res.render('homepage', {
       users,
+      // Pass the logged in flag to the template
       loggedIn: req.session.loggedIn,
     });
     

@@ -3,7 +3,6 @@ const { User } = require('../../models');
 console.log("Starting the route file...");
 router.post('/', async (req, res) => {
   try {
-    console.log("im in the try");
     const userData = await User.create({
         name: req.body.name,
         email: req.body.email,
