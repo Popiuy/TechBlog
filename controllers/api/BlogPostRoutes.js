@@ -4,63 +4,90 @@ const withAuth = require('../../utils/auth');
 
 router.get('/', async (req, res) => {
   try {
-    // Get all BlogPosts and JOIN with user data
-    const BlogPostData = await BlogPosts.findAll({
-      ...req.body,
-      attributes: [['title', 'contents', 'date_created']],
-    });
-
-    // Serialize data so the template can read it
-    const BlogPosts = BlogPostData.map((BlogPosts) => BlogPosts.get({ plain: true }));
-    res.render('blogposts', { 
-      BlogPosts
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-router.get('/:id', async (req, res) => {
-  try {
-    const BlogPostData = await BlogPosts.findByPk(req.params.id, {
+    const blogPostData = await BlogPosts.findAll({
       include: [
         {
           model: User,
-          attributes: ['title', 'contents'],
+          attributes: ['name'],
+        },
+        {
+          model: Comment,
+          attributes: ['description'],
         },
       ],
     });
 
-    const BlogPosts = BlogPostData.get({ plain: true });
+    const blogPosts = blogPostData.map((post) => post.get({ plain: true }));
 
-    res.render('blogposts', {
-      ...BlogPosts,
-      logged_in: req.BlogPosts.logged_in
+    const loggedIn = req.session.loggedIn;
+
+    res.render('homepage', {
+      blogPosts,
+      loggedIn,
     });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+
+router.get('/:id', async (req, res) => {
+  try {
+    const BlogPostData = await BlogPosts.findByPk(req.params.id);
+    res.status(200).json(BlogPostData);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
+
 router.post('/', withAuth, async (req, res) => {
   try {
-    const BlogPostData = await BlogPosts.create({
+    const newBlogPost = await BlogPosts.create({
       ...req.body,
       user_id: req.session.user_id,
     });
 
-    res.status(200).json(BlogPostData);
+    res.status(200).json(newBlogPost);
   } catch (err) {
     res.status(400).json(err);
   }
 });
+
+router.put('/:id', withAuth, async (req, res) => {
+  try {
+    const updatedBlogPost = await BlogPosts.update(
+      {
+        title: req.body.title,
+        contents: req.body.contents,
+      },
+      {
+        where: {
+          id: req.params.id,
+          user_id: req.session.user_id,
+        },
+      }
+    );
+
+    if (!updatedBlogPost[0]) {
+      res.status(404).json({ message: 'No BlogPosts found with this id!' });
+      return;
+    }
+
+    res.status(200).json({ message: 'BlogPost updated successfully' });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 router.delete('/:id', withAuth, async (req, res) => {
   try {
     const BlogPostData = await BlogPosts.destroy({
       where: {
         id: req.params.id,
-        user_id: req.BlogPosts.user_id,
+        user_id: req.session.user_id,
       },
     });
 

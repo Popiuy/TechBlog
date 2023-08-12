@@ -24,21 +24,19 @@
   </div>
 
   {{#if BlogPosts.length}}
-  <div class="col-md-6 BlogPost-list">
-    <h3>Current BlogPosts:</h3>
+<div class="col-md-6 BlogPost-list">
+  <h3>Current BlogPosts:</h3>
 
-    {{#each BlogPosts as |BlogPost|}}
-    <div class="row mb-2">
-      <div class="col-md-8">
-        <h4><a href="/blogposts/{{BlogPost.id}}">{{BlogPost.name}}</a></h4>
-      </div>
-      <div class="col-md-4">
-        <button class="btn btn-sm btn-danger" data-id="{{BlogPost.id}}">DELETE</button>
-      </div>
+  {{#each BlogPosts as |BlogPost|}}
+  <div class="row mb-2">
+    <div class="col-md-8">
+      <h4><a href="/api/blogposts/{{BlogPost.id}}">{{BlogPost.title}}</a></h4>
     </div>
-    {{/each}}
+    <div class="col-md-4">
+      <button class="btn btn-sm btn-danger" data-id="{{BlogPost.id}}">DELETE</button>
+    </div>
   </div>
-  {{/if}}
+  {{/each}}
 </div>
+{{/if}}
 
-<script src="./js/BlogPosts.js"></script>
